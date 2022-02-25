@@ -30,8 +30,10 @@ class EnteringFirstNumberState implements ICalculatorState {
   binaryOperator(calc: CalculatorModel, operator: Operator): void {
     if (operator === Operator.Sqrt){
       this.buffer = Math.sqrt(parseFloat(this.buffer === '' ? '0' : this.buffer)).toString();
-    } if (operator === Operator.Neg){
+      calc.changeState(new EnteringFirstNumberState(this.buffer));
+    } else if (operator === Operator.Neg){
       this.buffer = (-(parseFloat(this.buffer === '' ? '0' : this.buffer))).toString();
+      calc.changeState(new EnteringFirstNumberState(this.buffer));
     } else {
       calc.changeState(new EnteringSecondNumberState(this.buffer === '' ? '0' : this.buffer, '', operator));
     }
@@ -57,6 +59,12 @@ class EnteringSecondNumberState implements ICalculatorState {
     const firstNumber = parseFloat(this.firstBuffer === '' ? '0' : this.firstBuffer);
     const secondNumber = parseFloat(this.secondBuffer === '' ? '0' : this.secondBuffer);
     switch (operator){
+      case Operator.Neg:
+        this.secondBuffer = (-(secondNumber)).toString();
+        break;
+      case Operator.Sqrt:
+        this.secondBuffer = Math.sqrt(secondNumber).toString();
+        break;
       case Operator.Plus:   // in case of + or - after having entered two numbers, apply the first operator and stay in this state
       case Operator.Minus:  // (or go to ErrorState in case of division by zero)
         if (this.firstOperator === Operator.Plus){
@@ -132,7 +140,11 @@ class EnteringThirdNumberState implements ICalculatorState {
     const firstNumber = parseFloat(this.firstBuffer === '' ? '0' : this.firstBuffer);
     const secondNumber = parseFloat(this.secondBuffer === '' ? '0' : this.secondBuffer);
     const thirdNumber = parseFloat(this.thirdBuffer === '' ? '0' : this.thirdBuffer);
-    if (operator === Operator.Mult){
+    if (operator === Operator.Neg){
+      this.thirdBuffer = (-(thirdNumber)).toString();
+    } else if (operator === Operator.Sqrt){
+      this.thirdBuffer = Math.sqrt(thirdNumber).toString();
+    } else if (operator === Operator.Mult){
       const result = secondNumber*thirdNumber;
       this.secondBuffer = result.toString();
       this.thirdBuffer = '';
