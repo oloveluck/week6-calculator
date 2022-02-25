@@ -1,6 +1,7 @@
 import {useState } from 'react';
 import './Calculator.css';
 import { CalculatorModel } from './CalculatorModel'
+const calcState = new CalculatorModel();
 
 function CalculatorDisplay(props : {arg : string}) {
   return <div className="calculator-display">{props.arg}</div>;
@@ -10,7 +11,6 @@ function CalculatorKey(arg: any) {
 }
 export default function Calculator() {
   const [display , setDisplay] = useState("0"); 
-  const calcState = new CalculatorModel(); 
 
   return (
     <div className="calculator">
@@ -20,10 +20,17 @@ export default function Calculator() {
           <div className="function-keys">
             <CalculatorKey className="key-clear" label="C" onPress={() => {
               calcState.pressClear();
-              setDisplay(calcState.display())
+              setDisplay(calcState.display()); 
             }}>{'C'}</CalculatorKey>
-            <CalculatorKey className="key-sign" label="±" onPress={() => {}}>±</CalculatorKey>
-            <CalculatorKey className="key-percent" label="√" onPress={() => {}}>√</CalculatorKey>
+            <CalculatorKey className="key-sign" label="±" onPress={() => {
+              calcState.pressNeg();
+              setDisplay(calcState.display()); 
+              }}>±</CalculatorKey>
+            <CalculatorKey className="key-percent" label="√" onPress={() => {
+              console.log("heerrrreee");
+              calcState.pressSqrt();
+              setDisplay(calcState.display()); 
+            }}>√</CalculatorKey>
           </div>
           <div className="digit-keys">
             <CalculatorKey className="key-0" label="0" onPress={() => {
@@ -32,7 +39,7 @@ export default function Calculator() {
             }}></CalculatorKey>
             <CalculatorKey className="key-dot" label="•" onPress={() => {
               calcState.pressDot();
-              setDisplay(calcState.display);
+              setDisplay(calcState.display());
             }}>●</CalculatorKey>
             <CalculatorKey className="key-1" label="1" onPress={() => {
               calcState.pressOne();
@@ -73,18 +80,25 @@ export default function Calculator() {
           </div>
         </div>
         <div className="operator-keys">
-          <CalculatorKey className="key-divide" label="/" onPress={() => { alert('key-divide pressed'); }}>÷</CalculatorKey>
+          <CalculatorKey className="key-divide" label="/" onPress={() => { 
+            calcState.pressDiv();
+            setDisplay(calcState.display()); 
+            }}>÷</CalculatorKey>
           <CalculatorKey className="key-multiply" label="×" onPress={() => {
             calcState.pressMult();
+            setDisplay(calcState.display()); 
            }}>*</CalculatorKey>
           <CalculatorKey className="key-subtract" label="-" onPress={() => { 
             calcState.pressMinus();
+            setDisplay(calcState.display()); 
           }}>−</CalculatorKey>
           <CalculatorKey className="key-add" label="+" onPress={() => { 
             calcState.pressPlus();
+            setDisplay(calcState.display()); 
            }}>+</CalculatorKey>
           <CalculatorKey className="key-equals" label="=" onPress={() => { 
             calcState.pressEquals();
+            setDisplay(calcState.display()); 
            }}>=</CalculatorKey>
         </div>
       </div>
