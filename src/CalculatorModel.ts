@@ -28,9 +28,15 @@ class EnteringFirstNumberState implements ICalculatorState {
     } 
   }
   binaryOperator(calc: CalculatorModel, operator: Operator): void {
-    calc.changeState(new EnteringSecondNumberState(this.buffer === '' ? '0' : this.buffer, '', operator));
+    if (operator === Operator.Sqrt){
+      this.buffer = Math.sqrt(parseFloat(this.buffer === '' ? '0' : this.buffer)).toString();
+    } if (operator === Operator.Neg){
+      this.buffer = (-(parseFloat(this.buffer === '' ? '0' : this.buffer))).toString();
+    } else {
+      calc.changeState(new EnteringSecondNumberState(this.buffer === '' ? '0' : this.buffer, '', operator));
+    }
   }
-
+  
   equals(): void { /* pressing equals after entering one number has no effect */ }
   clear(): void { this.buffer = '0'; }
   display(){ return this.buffer !== '' ? this.buffer : '0'; }
@@ -230,6 +236,8 @@ export class CalculatorModel {
   public pressMinus() : void { this.state.binaryOperator(this, Operator.Minus); }
   public pressMult() : void { this.state.binaryOperator(this, Operator.Mult); }
   public pressDiv() : void { this.state.binaryOperator(this, Operator.Div); }
+  public pressSqrt() : void { this.state.binaryOperator(this, Operator.Sqrt); }
+  public pressNeg() : void { this.state.binaryOperator(this, Operator.Neg); }
   
   // returns the contents of the calculator's display
   public display() : string { return this.state.display(); }
